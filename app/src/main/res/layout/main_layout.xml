@@ -11,6 +11,7 @@
         android:hint="@string/write" />
     <Button
         android:layout_width="101dp"
+        android:id="@+id/translteButton"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="@string/translate" />

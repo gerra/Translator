@@ -7,14 +7,21 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:name = ".TranslateActivity"
+            android:label = "Translator">
+        </activity>
+
+        <activity
             android:name = ".MainActivity"
             android:label = "Translator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>>
+        </activity>
+
+
 
     </application>
-
+    
 </manifest>
