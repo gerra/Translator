@@ -40,12 +40,13 @@ public class TranslateActivity extends Activity {
         new LoadImage().execute("https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg");
         new LoadImage().execute("http://simpozia.com/pages/images/stories/windows-icon.png");
         new LoadImage().execute("http://radiotray.sourceforge.net/radio.png");
+        new LoadImage().execute("http://www.desiredsoft.com/images/icon_webhosting.png");
         new LoadImage().execute("http://www.bandwidthblog.com/wp-content/uploads/2011/11/twitter-logo.png");
         new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100907_itunes1.png");
         new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100929_applications.png");
         new LoadImage().execute("http://www.idyllicmusic.com/index_files/get_apple-iphone.png");
         new LoadImage().execute("http://www.frenchrevolutionfood.com/wp-content/uploads/2009/04/Twitter-Bird.png");
-        new LoadImage().execute("http://www.desiredsoft.com/images/icon_webhosting.png");
+        Toast.makeText(TranslateActivity.this, "Download is complete", Toast.LENGTH_SHORT).show();
     }
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
         @Override
@@ -67,6 +68,8 @@ public class TranslateActivity extends Activity {
                 adapter.notifyDataSetChanged();
                 Toast.makeText(TranslateActivity.this, "Download went okay ", Toast.LENGTH_SHORT).show();
             }else{
+                data.add(BitmapFactory.decodeResource(getResources(), R.drawable.android_logo));
+                adapter.notifyDataSetChanged();
                 Toast.makeText(TranslateActivity.this, "Image Does not exist or Network Error", Toast.LENGTH_SHORT).show();
             }
         }
