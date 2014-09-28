@@ -81,6 +81,8 @@ public class TranslateActivity extends Activity {
                 adapter.notifyDataSetChanged();
                 Toast.makeText(TranslateActivity.this, "Download went okay ", Toast.LENGTH_SHORT).show();
             }else{
+                data.add(BitmapFactory.decodeResource(getResources(), R.drawable.android_logo));
+                adapter.notifyDataSetChanged();
                 Toast.makeText(TranslateActivity.this, "Image Does not exist or Network Error", Toast.LENGTH_SHORT).show();
             }
         }
