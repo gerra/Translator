@@ -1,20 +1,21 @@
 package ru.android.german.translator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-/**
- * Created by creed on 28.09.14.
- */
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TranslatorAPI {
     public Context ctx = null;
@@ -24,8 +25,8 @@ public class TranslatorAPI {
         task.execute(q);
     }
 
-    public class LoadTask extends AsyncTask<String, Void, String> {
-        private final String USER_AGENT = "Mozilla/5.0";
+    public class LoadTask extends AsyncTask<String, Void, ArrayList<String> > {
+        //private final String USER_AGENT = "Mozilla/5.0";
         private final String key = "trnsl.1.1.20140927T191415Z.85ed08b03e3d84ae.c9561739ed7a76ef198ecb09eef98cceb9d102be";
 
         @Override
@@ -34,39 +35,67 @@ public class TranslatorAPI {
         }
 
         @Override
-        protected String doInBackground(String... query) {
-            System.out.println("Send Http GET request");
-            String res = "Empty response";
+        protected ArrayList<String> doInBackground(String... query) {
+            //System.out.println("Send Http GET request");
+            ArrayList<String> res = new ArrayList<String>();
             try {
-                URL translateUrl = new URL("https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+query[0]);
-                URL imagesUrl = new URL("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=penis&rsz=2&start=8);
+                String q = "";
+                for(int i = 0; i < query[0].length(); i++) {
+                    if (query[0].charAt(i) == ' ') {
+                        q += "%20";
+                    } else {
+                        q += query[0].charAt(i);
+                    }
+                }
+                URL translateUrl = new URL("https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+q);
                 HttpURLConnection con = (HttpURLConnection)translateUrl.openConnection();
                 con.setRequestMethod("GET");// optional default is GET
                 //con.setRequestProperty("User-Agent", USER_AGENT);//add request header
-
-                //System.out.println("Sending 'GET' request to URL : " + url);
                 System.out.println("Translation Response Code: "+con.getResponseCode());
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String translation = in.readLine();
+                String translation = (new JSONObject(in.readLine())).getJSONArray("text").getString(0);
                 in.close();
 
-                JSONObject r = new JSONObject(response);
-                res = r.getString("text");
-
+                ArrayList<String> imagesBuffer = new ArrayList<String>();
+                imagesBuffer.add(translation);
+                for(int i = 0; i < 2; i++) {
+                    String url = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+q+"&rsz=5&start="+(i*5);
+                    System.out.println(url);
+                    URL imagesUrl = new URL(url);
+                    con = (HttpURLConnection)imagesUrl.openConnection();
+                    con.setRequestMethod("GET");// optional default is GET
+                    System.out.println("Images(load "+(i+1)+") Response Code: "+con.getResponseCode());
+                    in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String tmp = in.readLine();
+                    System.out.println(tmp);
+                    JSONObject obj = new JSONObject(tmp).getJSONObject("responseData");
+                    JSONArray arr = obj.getJSONArray("results");
+                    in.close();
+                    for(int j = 0; j < arr.length(); j++) {
+                        JSONObject item = arr.getJSONObject(j);
+                        imagesBuffer.add(item.getString("url"));
+                    }
+                }
+                res = imagesBuffer;
             } catch (IOException io) {
                 System.out.println("IOException occured");
             } catch (JSONException e) {
                 System.out.println("JSONException occured");
-                e.printStackTrace();
             }
             return res;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            System.out.println("onPostExecute: " + result);
+        protected void onPostExecute(ArrayList<String> arr) {
+            super.onPostExecute(arr);
+            Intent intent = new Intent(ctx, TranslateActivity.class);
+            intent.putExtra("translate", arr.get(0));
+            for(int i = 0; i < 10; i++) {
+                intent.putExtra("img"+i, arr.get(i+1));
+            }
+            ctx.startActivity(intent);
         }
     }
+
 }
