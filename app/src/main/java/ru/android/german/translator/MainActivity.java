@@ -12,8 +12,10 @@ import android.widget.ListView;
  * Created by german on 26.09.14.
  */
 
+//dict.1.1.20140927T204944Z.38e0bd765b588895.e4a4b28725b82c0b6341b70dc3fa8f8e84c6fe72
+
 public class MainActivity extends Activity {
-    Button translateButton;
+    private Button translateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,6 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
                 startActivity(intent);
-                onDestroy();
             }
         });
     }
