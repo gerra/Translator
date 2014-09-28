@@ -26,13 +26,18 @@ public class TranslateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(R.layout.translate_activity);
         Intent intent = getIntent();
         if (intent != null) {
             String translate = intent.getStringExtra("translate");
             TextView textView = (TextView)findViewById(R.id.textView);
             textView.setText(translate);
         }
-        setContentView(R.layout.translate_activity);
         adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         GridView gridView = (GridView)findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
@@ -45,16 +50,17 @@ public class TranslateActivity extends Activity {
         });
 
         new LoadImage().execute("http://tabletpcssource.com/wp-content/uploads/2011/05/android-logo.png");
-        new LoadImage().execute("https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg");
-        new LoadImage().execute("http://simpozia.com/pages/images/stories/windows-icon.png");
-        new LoadImage().execute("http://radiotray.sourceforge.net/radio.png");
-        new LoadImage().execute("http://www.bandwidthblog.com/wp-content/uploads/2011/11/twitter-logo.png");
-        new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100907_itunes1.png");
-        new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100929_applications.png");
-        new LoadImage().execute("http://www.idyllicmusic.com/index_files/get_apple-iphone.png");
-        new LoadImage().execute("http://www.frenchrevolutionfood.com/wp-content/uploads/2009/04/Twitter-Bird.png");
-        new LoadImage().execute("http://www.desiredsoft.com/images/icon_webhosting.png");
+//        new LoadImage().execute("https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg");
+//        new LoadImage().execute("http://simpozia.com/pages/images/stories/windows-icon.png");
+//        new LoadImage().execute("http://radiotray.sourceforge.net/radio.png");
+//        new LoadImage().execute("http://www.bandwidthblog.com/wp-content/uploads/2011/11/twitter-logo.png");
+//        new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100907_itunes1.png");
+//        new LoadImage().execute("http://weloveicons.s3.amazonaws.com/icons/100929_applications.png");
+//        new LoadImage().execute("http://www.idyllicmusic.com/index_files/get_apple-iphone.png");
+//        new LoadImage().execute("http://www.frenchrevolutionfood.com/wp-content/uploads/2009/04/Twitter-Bird.png");
+//        new LoadImage().execute("http://www.desiredsoft.com/images/icon_webhosting.png");
     }
+
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
         @Override
         protected void onPreExecute() {

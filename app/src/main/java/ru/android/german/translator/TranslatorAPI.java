@@ -1,12 +1,15 @@
 package ru.android.german.translator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 
 /**
  * Created by creed on 28.09.14.
@@ -32,9 +35,10 @@ public class TranslatorAPI {
         @Override
         protected String doInBackground(String... query) {
             System.out.println("Send Http GET request");
+            String res = "Empty response";
             try {
-
-                String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+query;
+                String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="
+                        + Arrays.toString(query);
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");// optional default is GET
@@ -53,18 +57,21 @@ public class TranslatorAPI {
                     response.append(inputLine);
                 }
                 in.close();
-                return response.toString();
+                res = response.toString();
             } catch (IOException io) {
                 System.err.println("IOException occured");
             } finally {
-                return "Empty response";
+                return res;
             }
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            ctx.startNewActivity(result);
+            //ctx.startNewActivity(result);
+            Intent intent = new Intent(ctx, TranslateActivity.class);
+            intent.putExtra("translate", result);
+            ctx.startActivity(intent);
             System.out.println("onPostExecute: " + result);
         }
     }

@@ -1,6 +1,7 @@
 package ru.android.german.translator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private Button translateButton;
+    private boolean translateButtonWasClicked = false;
 
     public void startNewActivity(String translate) {
         Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
@@ -29,17 +31,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-
-        translateButton = (Button)findViewById(R.id.translteButton);
-        translateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText editText = (EditText)findViewById(R.id.inputWord);
-                String input = editText.getText().toString();
-                TranslatorAPI api = new TranslatorAPI();
-                api.exec(input);
-            }
-        });
     }
 
     @Override
@@ -50,6 +41,21 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        final Context context = this;
+        translateButtonWasClicked = false;
+        translateButton = (Button)findViewById(R.id.translteButton);
+        translateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (translateButtonWasClicked) return;
+                translateButtonWasClicked = true;
+                EditText editText = (EditText)findViewById(R.id.inputWord);
+                String input = editText.getText().toString();
+                TranslatorAPI api = new TranslatorAPI();
+                api.exec(context, input);
+
+            }
+        });
     }
 
 
