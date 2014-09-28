@@ -19,6 +19,7 @@
         android:id="@+id/gridView"
         android:layout_weight="0.86"
         android:numColumns="auto_fit"
+        android:columnWidth="200dp"
         android:clickable="false"
         />
 
