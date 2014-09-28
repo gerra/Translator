@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,7 +18,12 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private Button translateButton;
-    private String input;
+
+    public void startNewActivity(String translate) {
+        Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
+        intent.putExtra("translate", translate);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +34,10 @@ public class MainActivity extends Activity {
         translateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
-                TextView textView = (TextView)findViewById(R.id.textView);
-                input = textView.getText().toString();
-                startActivity(intent);
+                EditText editText = (EditText)findViewById(R.id.inputWord);
+                String input = editText.getText().toString();
+                TranslatorAPI api = new TranslatorAPI();
+                api.exec(input);
             }
         });
     }

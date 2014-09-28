@@ -1,6 +1,7 @@
 package ru.android.german.translator;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.io.InputStream;
 import java.net.URL;
@@ -24,6 +26,12 @@ public class TranslateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            String translate = intent.getStringExtra("translate");
+            TextView textView = (TextView)findViewById(R.id.textView);
+            textView.setText(translate);
+        }
         setContentView(R.layout.translate_activity);
         adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         GridView gridView = (GridView)findViewById(R.id.gridView);
