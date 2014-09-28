@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by german on 26.09.14.
@@ -16,6 +17,7 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity {
     private Button translateButton;
+    private String input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
+                TextView textView = (TextView)findViewById(R.id.textView);
+                input = textView.getText().toString();
                 startActivity(intent);
             }
         });
