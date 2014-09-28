@@ -33,11 +33,6 @@ public class TranslateActivity extends Activity {
         super.onResume();
         setContentView(R.layout.translate_activity);
         Intent intent = getIntent();
-        if (intent != null) {
-            String translate = intent.getStringExtra("translate");
-            TextView textView = (TextView)findViewById(R.id.textView);
-            textView.setText(translate);
-        }
         adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         GridView gridView = (GridView)findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
@@ -48,8 +43,19 @@ public class TranslateActivity extends Activity {
                 finish();
             }
         });
-
-        new LoadImage().execute("http://tabletpcssource.com/wp-content/uploads/2011/05/android-logo.png");
+        if (intent != null) {
+            String translate = intent.getStringExtra("translate");
+            TextView textView = (TextView)findViewById(R.id.textView);
+            textView.setText(translate);
+            for (int i = 0; i < 9; i++) {
+                String url;
+                if (intent.hasExtra("img" + i)) {
+                    url = intent.getStringExtra("img"+i);
+                    new LoadImage().execute(url);
+                }
+            }
+        }
+//        new LoadImage().execute("http://tabletpcssource.com/wp-content/uploads/2011/05/android-logo.png");
 //        new LoadImage().execute("https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg");
 //        new LoadImage().execute("http://simpozia.com/pages/images/stories/windows-icon.png");
 //        new LoadImage().execute("http://radiotray.sourceforge.net/radio.png");
