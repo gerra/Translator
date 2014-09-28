@@ -51,9 +51,10 @@ public class MainActivity extends Activity {
                 translateButtonWasClicked = true;
                 EditText editText = (EditText)findViewById(R.id.inputWord);
                 String input = editText.getText().toString();
-                TranslatorAPI api = new TranslatorAPI();
-                api.exec(context, input);
-
+                if (input.length() != 0) {
+                    TranslatorAPI api = new TranslatorAPI();
+                    api.exec(context, input);
+                }
             }
         });
     }

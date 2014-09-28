@@ -91,7 +91,7 @@ public class TranslatorAPI {
             super.onPostExecute(arr);
             Intent intent = new Intent(ctx, TranslateActivity.class);
             intent.putExtra("translate", arr.get(0));
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < arr.size()-1; i++) {
                 intent.putExtra("img"+i, arr.get(i+1));
             }
             ctx.startActivity(intent);

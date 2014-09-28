@@ -11,7 +11,9 @@
         android:text="Translated word"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal|top"
-        android:layout_weight="0.08" />
+        android:layout_weight="0.08"
+        android:textSize="50dp"
+        android:layout_margin="5dp" />
 
     <GridView
         android:layout_width="match_parent"
