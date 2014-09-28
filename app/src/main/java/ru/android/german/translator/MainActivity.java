@@ -25,6 +25,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, TranslateActivity.class);
+                TranslatorAPI api = new TranslatorAPI();
+                api.exec("Дуров");
                 startActivity(intent);
                 onDestroy();
             }
