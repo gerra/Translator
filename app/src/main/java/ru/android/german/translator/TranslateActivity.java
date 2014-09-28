@@ -20,13 +20,14 @@ import java.util.HashMap;
 public class TranslateActivity extends Activity {
     private Button backButton;
     ArrayList<Bitmap> data = new ArrayList<Bitmap>();
+    GridViewAdapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.translate_activity);
 
-        GridViewAdapter adapter = new GridViewAdapter(this, R.layout.grid_item, data);
+        adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         GridView gridView = (GridView)findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
 
