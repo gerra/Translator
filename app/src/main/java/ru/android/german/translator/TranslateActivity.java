@@ -32,9 +32,13 @@ public class TranslateActivity extends Activity {
     protected void onResume() {
         super.onResume();
         setContentView(R.layout.translate_activity);
+
+        //adapter.notify();
+
         Intent intent = getIntent();
-        adapter = new GridViewAdapter(this, R.layout.grid_item, data);
+
         GridView gridView = (GridView)findViewById(R.id.gridView);
+        adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         gridView.setAdapter(adapter);
         backButton = (Button)findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +51,7 @@ public class TranslateActivity extends Activity {
             String translate = intent.getStringExtra("translate");
             TextView textView = (TextView)findViewById(R.id.textView);
             textView.setText(translate);
-            for (int i = 0; i < 9; i++) {
+            for (int i = data.size(); i < 10; i++) {
                 String url;
                 if (intent.hasExtra("img" + i)) {
                     url = intent.getStringExtra("img"+i);
