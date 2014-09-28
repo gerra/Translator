@@ -1,5 +1,6 @@
 package ru.android.german.translator;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,17 +13,16 @@ import java.net.URL;
  */
 
 public class TranslatorAPI {
-    public TranslatorAPI() {
-
-    }
-
-    public void exec(String q) {
+    public Context ctx = null;
+    public void exec(Context ctx, String q) {
+        this.ctx = ctx;
         LoadTask task = new LoadTask();
         task.execute(q);
     }
 
     public class LoadTask extends AsyncTask<String, Void, String> {
         private final String USER_AGENT = "Mozilla/5.0";
+        private final String key = "trnsl.1.1.20140927T191415Z.85ed08b03e3d84ae.c9561739ed7a76ef198ecb09eef98cceb9d102be";
 
         @Override
         protected void onPreExecute() {
@@ -33,7 +33,8 @@ public class TranslatorAPI {
         protected String doInBackground(String... query) {
             System.out.println("Send Http GET request");
             try {
-                String url = "http://www.google.com/search?q=" + query;
+
+                String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+query;
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");// optional default is GET
@@ -52,9 +53,6 @@ public class TranslatorAPI {
                     response.append(inputLine);
                 }
                 in.close();
-
-                //print result
-                //System.out.println(response.toString());
                 return response.toString();
             } catch (IOException io) {
                 System.err.println("IOException occured");
@@ -66,6 +64,7 @@ public class TranslatorAPI {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            ctx.startNewActivity(result);
             System.out.println("onPostExecute: " + result);
         }
     }
