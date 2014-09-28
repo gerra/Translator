@@ -2,6 +2,10 @@ package ru.android.german.translator;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,39 +36,36 @@ public class TranslatorAPI {
         @Override
         protected String doInBackground(String... query) {
             System.out.println("Send Http GET request");
+            String res = "Empty response";
             try {
-
-                String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+query;
-                URL obj = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                URL translateUrl = new URL("https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key="+key+"&text="+query[0]);
+                URL imagesUrl = new URL("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=penis&rsz=2&start=8);
+                HttpURLConnection con = (HttpURLConnection)translateUrl.openConnection();
                 con.setRequestMethod("GET");// optional default is GET
-                con.setRequestProperty("User-Agent", USER_AGENT);//add request header
+                //con.setRequestProperty("User-Agent", USER_AGENT);//add request header
 
-                int responseCode = con.getResponseCode();
-                System.out.println("\nSending 'GET' request to URL : " + url);
-                System.out.println("Response Code : " + responseCode);
+                //System.out.println("Sending 'GET' request to URL : " + url);
+                System.out.println("Translation Response Code: "+con.getResponseCode());
 
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String translation = in.readLine();
                 in.close();
-                return response.toString();
+
+                JSONObject r = new JSONObject(response);
+                res = r.getString("text");
+
             } catch (IOException io) {
-                System.err.println("IOException occured");
-            } finally {
-                return "Empty response";
+                System.out.println("IOException occured");
+            } catch (JSONException e) {
+                System.out.println("JSONException occured");
+                e.printStackTrace();
             }
+            return res;
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            ctx.startNewActivity(result);
             System.out.println("onPostExecute: " + result);
         }
     }
