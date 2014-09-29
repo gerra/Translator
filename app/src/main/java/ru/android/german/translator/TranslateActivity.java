@@ -22,6 +22,7 @@ public class TranslateActivity extends Activity {
     private Button backButton;
     private GridViewAdapter adapter = null;
     ArrayList<Bitmap> data = new ArrayList<Bitmap>();
+    LoadImage[] loadImages = new LoadImage[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,13 @@ public class TranslateActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         setContentView(R.layout.translate_activity);
-        Intent intent = getIntent();
         GridView gridView = (GridView)findViewById(R.id.gridView);
         adapter = new GridViewAdapter(this, R.layout.grid_item, data);
         gridView.setAdapter(adapter);
+
         backButton = (Button)findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,16 +44,32 @@ public class TranslateActivity extends Activity {
                 finish();
             }
         });
+
+        Intent intent = getIntent();
         if (intent != null) {
-            String translate = intent.getStringExtra("translate");
+            String translate = "Yandex translator doesn't work . . .";
+            if (intent.hasExtra("translate")) {
+                translate = intent.getStringExtra("translate");
+            }
             TextView textView = (TextView)findViewById(R.id.textView);
             textView.setText(translate);
             for (int i = data.size(); i < 10; i++) {
                 String url;
                 if (intent.hasExtra("img" + i)) {
                     url = intent.getStringExtra("img"+i);
-                    new LoadImage().execute(url);
+                    loadImages[i] = new LoadImage();
+                    loadImages[i].execute(url);
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = 0; i < 10; i++) {
+            if (loadImages[i] != null) {
+                loadImages[i].cancel(true);
             }
         }
     }
@@ -68,8 +85,9 @@ public class TranslateActivity extends Activity {
                 bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                return bitmap;
             }
-            return bitmap;
         }
         protected void onPostExecute(Bitmap image) {
             if(image != null){

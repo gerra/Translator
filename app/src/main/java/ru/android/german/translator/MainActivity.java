@@ -54,6 +54,9 @@ public class MainActivity extends Activity {
                 if (input.length() != 0) {
                     TranslatorAPI api = new TranslatorAPI();
                     api.exec(context, input);
+                    translateButtonWasClicked = false;
+                } else {
+                    translateButtonWasClicked = false;
                 }
             }
         });
