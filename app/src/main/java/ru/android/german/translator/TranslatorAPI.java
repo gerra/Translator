@@ -1,5 +1,6 @@
 package ru.android.german.translator;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,8 +20,13 @@ import java.util.Arrays;
 
 public class TranslatorAPI {
     public Context ctx = null;
+    ProgressDialog progressDialog;
+
     public void exec(Context ctx, String q) {
         this.ctx = ctx;
+        progressDialog = new ProgressDialog(ctx);
+        progressDialog.setMessage("Translating...");
+        progressDialog.show();
         LoadTask task = new LoadTask();
         task.execute(q);
     }
@@ -36,6 +42,7 @@ public class TranslatorAPI {
 
         @Override
         protected ArrayList<String> doInBackground(String... query) {
+            //System.out.print(query[0].length());
             //System.out.println("Send Http GET request");
             ArrayList<String> res = new ArrayList<String>();
             try {
@@ -43,7 +50,7 @@ public class TranslatorAPI {
                 for(int i = 0; i < query[0].length(); i++) {
                     if (query[0].charAt(i) == ' ') {
                         q += "%20";
-                    } else {
+                    } else if (query[0].charAt(i) != '\n') {
                         q += query[0].charAt(i);
                     }
                 }
@@ -90,10 +97,13 @@ public class TranslatorAPI {
         protected void onPostExecute(ArrayList<String> arr) {
             super.onPostExecute(arr);
             Intent intent = new Intent(ctx, TranslateActivity.class);
-            intent.putExtra("translate", arr.get(0));
+            if (arr.size() > 0) {
+                intent.putExtra("translate", arr.get(0));
+            }
             for(int i = 0; i < arr.size()-1; i++) {
                 intent.putExtra("img"+i, arr.get(i+1));
             }
+            progressDialog.dismiss();
             ctx.startActivity(intent);
         }
     }
