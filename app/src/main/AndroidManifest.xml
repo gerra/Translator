@@ -8,8 +8,7 @@
 
         <activity
             android:name = ".TranslateActivity"
-            android:label = "Translator"
-            android:screenOrientation="portrait">
+            android:label = "Translator">
         </activity>
 
         <activity

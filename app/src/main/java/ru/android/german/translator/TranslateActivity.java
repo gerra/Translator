@@ -21,17 +21,17 @@ import java.util.ArrayList;
 public class TranslateActivity extends Activity {
     private Button backButton;
     private GridViewAdapter adapter = null;
+    private Intent intent = null;
     ArrayList<Bitmap> data = new ArrayList<Bitmap>();
     LoadImage[] loadImages = new LoadImage[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        Object lastInstance = getLastNonConfigurationInstance();
+        if (lastInstance != null) {
+            data = (ArrayList<Bitmap>)lastInstance;
+        }
         setContentView(R.layout.translate_activity);
         GridView gridView = (GridView)findViewById(R.id.gridView);
         adapter = new GridViewAdapter(this, R.layout.grid_item, data);
@@ -45,7 +45,9 @@ public class TranslateActivity extends Activity {
             }
         });
 
-        Intent intent = getIntent();
+        if (intent == null) {
+            intent = getIntent();
+        }
         if (intent != null) {
             String translate = "Yandex translator doesn't work . . .";
             if (intent.hasExtra("translate")) {
@@ -62,6 +64,17 @@ public class TranslateActivity extends Activity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        //return super.onRetainNonConfigurationInstance();
+        return data;
     }
 
     @Override
